@@ -13,9 +13,11 @@ app.use(cors());
 
 //excuting routes
  app.use(routes)
-
+app.get('/',(req,res)=>{
+  res.send("Hello....")
+})
 
 app.listen(PORT, () => {
-  console.log(`application started http://localhost:${PORT}`);
+  console.log(`app is listening on port:${PORT}`);
 });
 
