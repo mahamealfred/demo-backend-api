@@ -1,14 +1,13 @@
 
 const rraDetails=require("../dammyData/rraData");
-
+const axios = require('axios');
+const { rraTaxPaymentIndependentAgent } = require("../services/rraServices");
 class rraController{
     static async docIdDetails(req, res) {
         const rra_doc_id=req.params.rra_doc_id;
         let checkedId
         let bank_name,RRA_REF, TIN, TAX_PAYER_NAME,TAX_TYPE_DESC,TAX_CENTRE_NO
         let  TAX_TYPE_NO,ASSESS_NO,RRA_ORIGIN_NO,AMOUNT_TO_PAY, DEC_ID,DEC_DATE
-        
-        
         try {
          rraDetails.map((p)=>{
              if(p.RRA_REF==rra_doc_id){
@@ -60,6 +59,49 @@ class rraController{
               });  
         }
    
+    }
+
+    static async rraPayment(req, res) {
+const {bankName,rraRef,tin,taxPayerName,taxTypeDesc,taxCenterNo,taxTypeNo,assessNo,rraOriginNo,amountToPay,descId,payerPhone,brokering}=req.body
+const authheader = req.headers.authorization;
+if (!authheader) {
+    return res.status(401).json({
+      status: 401,
+      message: "A token is required for authentication",
+    });
+}
+let resp_payment
+if(brokering!=='Independent'){
+  return res.status(401).json({
+    statusCode: 401,
+    status:"FAILED",
+    message: "You are not authorized to do this payment",
+  });  
+ 
+}
+//here
+try{
+resp_payment=await rraTaxPaymentIndependentAgent(taxPayerName,taxTypeDesc,amountToPay,descId,tin,payerPhone,authheader)
+if(!resp_payment.transactionNumber){
+  return res.status(401).json({
+    statusCode: 401,
+    status:"FAILED",
+    response:resp_payment
+  }); 
+}
+return res.status(200).json({
+  statusCode: 200,
+  status:"SUCCESS",
+  response:resp_payment
+}); 
+  
+      } catch (error) {
+        return res.status(500).json({
+          statusCode: 500,
+          status:"FAILED",
+          message: error.message,
+        });  
+      }
     }
    
 }

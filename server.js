@@ -9,7 +9,7 @@ const PORT = process.env.PORT;
 //loading middlewares
 app.use(express.json());
 app.use(cors());
-
+app.enable('trust proxy');
 
 //excuting routes
  app.use(routes)
