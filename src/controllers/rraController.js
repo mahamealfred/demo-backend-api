@@ -81,19 +81,7 @@ if(brokering!=='Independent'){
 }
 //here
 try{
-resp_payment=await rraTaxPaymentIndependentAgent(taxPayerName,taxTypeDesc,amountToPay,descId,tin,payerPhone,authheader)
-if(!resp_payment.transactionNumber){
-  return res.status(401).json({
-    statusCode: 401,
-    status:"FAILED",
-    response:resp_payment
-  }); 
-}
-return res.status(200).json({
-  statusCode: 200,
-  status:"SUCCESS",
-  response:resp_payment
-}); 
+await rraTaxPaymentIndependentAgent(taxPayerName,taxTypeDesc,amountToPay,descId,tin,payerPhone,authheader,res)
   
       } catch (error) {
         return res.status(500).json({

@@ -1,12 +1,11 @@
 const axios = require('axios');
 
-const rraTaxPaymentIndependentAgent=async(taxPayerName,taxTypeDesc,amountToPay,descId,tin,payerPhone,authheader)=>{
+const rraTaxPaymentIndependentAgent=async(taxPayerName,taxTypeDesc,amountToPay,descId,tin,payerPhone,authheader,res)=>{
     const auth = new Buffer.from(authheader.split(' ')[1],
 'base64').toString().split(':');
 const user = auth[0];
 const pass = auth[1];
 const auths=user+pass
-
 
     let data = JSON.stringify({
         "amount": amountToPay,
@@ -30,20 +29,32 @@ const auths=user+pass
         url: 'https://testbox.mobicash.rw/CoreBank/test_box/api/self/payments',
         headers: { 
           'Content-Type': 'application/json', 
-          'Authorization': `Basic ${authheader}`
+          'Authorization': authheader
         },
         data : data
       };
       
       axios.request(config)
       .then((response) => {
-     
-       
-       return JSON.stringify(response.data)
+       if(!response.data.transactionNumber){
+        return res.status(401).json({
+          statusCode: 401,
+          status:"FAILED",
+          response:"Something went wrong!"
+        }); 
+      }
+      return res.status(200).json({
+        statusCode: 200,
+        status:"SUCCESS",
+        response:response.data.transactionNumber
+      }); 
       })
       .catch((error) => {
-        console.log(error);
-        return JSON.stringify(error)
+        return res.status(500).json({
+          statusCode: 500,
+          status:"FAILED",
+          response:error
+        }); 
       });
       
 }
