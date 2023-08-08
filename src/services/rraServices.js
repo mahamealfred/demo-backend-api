@@ -8,25 +8,25 @@ const pass = auth[1];
 const auths=user+pass
 
     let data = JSON.stringify({
-        "amount": amountToPay,
-        "description": "T10: RRA Tax Payment(Independent Agent - Level 2 Testing)",
-        "currency": "RW",
-        "type": "agents_account.rra_agent_tax_payment_by_independent_agent",
-        "customValues": {
-          "transaction_reference_type": "rra_tax",
-          "rra_tax_description": taxTypeDesc,
-          "tax_document_id": descId,
-          "tax_identification_number":tin,
-          "payer_name": taxPayerName,
-          "payer_phone": payerPhone
-        },
-        "subject": "'400401665710193"
+          "amount": amountToPay,
+          "description": "T1: RRA Tax Payment(Client - Level 1 Testing)",
+          "currency": "RW",
+          "type": "client_client_account.rra_tax_payment",
+          "customValues": {
+              "transaction_reference_type":"rra_tax",
+              "rra_tax_description":taxTypeDesc,
+              "tax_document_id": descId,
+              "tax_identification_number":tin,
+              "client_name":"Remy"
+          },
+          "subject": "'400401665710193"
+     
       });
       
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://testbox.mobicash.rw/CoreBank/test_box/api/self/payments',
+        url: 'http://test.0360.money/0360Test/GH/api/self/payments',
         headers: { 
           'Content-Type': 'application/json', 
           'Authorization': authheader
@@ -36,7 +36,7 @@ const auths=user+pass
       
       axios.request(config)
       .then((response) => {
-       if(!response.data.transactionNumber){
+       if(!response.data.id){
         return res.status(401).json({
           statusCode: 401,
           status:"FAILED",
@@ -46,14 +46,32 @@ const auths=user+pass
       return res.status(200).json({
         statusCode: 200,
         status:"SUCCESS",
-        response:response.data.transactionNumber
+        response:{
+          transactionId:response.data.id,
+          amount:response.data.amount,
+          date:response.data.date
+        }
       }); 
       })
       .catch((error) => {
+        if(error.response.status==401){
+          return res.status(401).json({
+            statusCode: 401,
+            status:"FAILED",
+            response:"Invalid Authentication"
+          }); 
+        }
+        else if(error.response.status==422){
+          return res.status(422).json({
+            statusCode: 422,
+            status:"FAILED",
+            response:"Tax Document Id must be unique"
+          }); 
+        }
         return res.status(500).json({
           statusCode: 500,
           status:"FAILED",
-          response:error
+          error
         }); 
       });
       
