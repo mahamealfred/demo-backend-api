@@ -1,15 +1,32 @@
 
 const usersDetails=require("../dammyData/usersData");
-
+const { decode, encode } = require("../helpers/jsonwebToken");
 class authController{
     static async signIn(req, res) {
-        const {email,password}=req.body
-        let checkedEmail,checkedPassword
+        //const {username,password}=req.body
+        const authheader = req.headers.authorization;
+        const auth = new Buffer.from(authheader.split(' ')[1],
+        'base64').toString().split(':');
+        const username = auth[0];
+        const password = auth[1];
+       
+        
+        let checkedEmail,checkedPassword;
+        let fullname,role,user,phone,isActive,emailLabel,brokering,group;
+        
         try {
          usersDetails.map((p)=>{
-             if(p.email==email){
-               checkedEmail=p.email,
-               checkedPassword=p.password
+             if(p.username==username){
+               checkedEmail=p.username,
+               checkedPassword=p.password,
+               emailLabel=p.email,
+               fullname=p.fullName,
+               role=p.role,
+               user=p.username,
+               phone=p.phoneNumber,
+               isActive=p.isActive
+               brokering=p.brokering
+               group=p.group
               }
           })
           if(checkedEmail){
@@ -18,7 +35,17 @@ class authController{
                     statusCode: 200,
                     status:"SUCCESS",
                     message: "Successfull logged",
-                    data:{}
+                    data:{
+                      fullName:fullname,
+                      role:role,
+                      email:emailLabel,
+                      username:user,
+                      phoneNumber:phone,
+                      brokering:brokering,
+                      group:group,
+                      isActive:isActive,
+                      token:encode({emailLabel,role})
+                    }
 
                   });
             }
