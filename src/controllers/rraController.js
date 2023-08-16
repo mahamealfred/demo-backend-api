@@ -22,7 +22,8 @@ class rraController{
                 ASSESS_NO=p.ASSESS_NO
                 RRA_ORIGIN_NO=p.RRA_ORIGIN_NO
                 AMOUNT_TO_PAY=p.AMOUNT_TO_PAY
-                DEC_ID,DEC_DATE=p.DEC_ID,DEC_DATE
+                DEC_ID=p.DEC_ID,
+                DEC_DATE=p.DEC_ID,DEC_DATE
               }
           })
           if(checkedId){

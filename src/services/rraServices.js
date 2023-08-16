@@ -54,14 +54,14 @@ const auths=user+pass
       }); 
       })
       .catch((error) => {
-        if(error.response.status==401){
+        if(error.status==401){
           return res.status(401).json({
             statusCode: 401,
             status:"FAILED",
             response:"Invalid Authentication"
           }); 
         }
-        else if(error.response.status==422){
+        else if(error.status==422){
           return res.status(422).json({
             statusCode: 422,
             status:"FAILED",
@@ -71,7 +71,7 @@ const auths=user+pass
         return res.status(500).json({
           statusCode: 500,
           status:"FAILED",
-          error
+          message:error.message
         }); 
       });
       
