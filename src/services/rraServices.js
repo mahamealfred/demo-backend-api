@@ -40,13 +40,13 @@ const auths=user+pass
         return res.status(401).json({
           statusCode: 401,
           status:"FAILED",
-          response:"Something went wrong!"
+          message:"Something went wrong!"
         }); 
       }
       return res.status(200).json({
         statusCode: 200,
         status:"SUCCESS",
-        response:{
+        data:{
           transactionId:response.data.id,
           amount:response.data.amount,
           date:response.data.date
@@ -58,14 +58,14 @@ const auths=user+pass
           return res.status(401).json({
             statusCode: 401,
             status:"FAILED",
-            response:"Invalid Authentication"
+            message:"Invalid Authentication"
           }); 
         }
         else if(error.status==422){
           return res.status(422).json({
             statusCode: 422,
             status:"FAILED",
-            response:"Tax Document Id must be unique"
+            message:"Tax Document Id must be unique"
           }); 
         }
         return res.status(500).json({

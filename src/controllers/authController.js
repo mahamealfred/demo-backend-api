@@ -52,13 +52,13 @@ class authController{
             return res.status(400).json({
                 statusCode: 400,
                 status:"FAILED",
-                message: "Invalid password"
+                message: "Please enter a correct Password"
               });
            
           } return res.status(404).json({
             statusCode: 404,
             status:"FAILED",
-            message: "User does'not exist"
+            message: "Please enter a correct Username"
           });
             
         } catch (error) {

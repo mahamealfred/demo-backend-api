@@ -49,7 +49,7 @@ class rraController{
           } return res.status(404).json({
             statusCode: 404,
             status:"FAILED",
-            message: "RRA reference not fount"
+            message: "RRA reference not found"
           });
             
         } catch (error) {
