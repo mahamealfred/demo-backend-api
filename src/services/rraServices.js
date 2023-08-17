@@ -54,18 +54,19 @@ const auths=user+pass
       }); 
       })
       .catch((error) => {
-        if(error.status==401){
+   
+        if(error.response.status==401){
           return res.status(401).json({
             statusCode: 401,
             status:"FAILED",
             message:"Invalid Authentication"
           }); 
         }
-        else if(error.status==422){
+        else if(error.response.status==422){
           return res.status(422).json({
             statusCode: 422,
             status:"FAILED",
-            message:"Tax Document Id must be unique"
+            message:"Tax Document ID already paid"
           }); 
         }
         return res.status(500).json({
